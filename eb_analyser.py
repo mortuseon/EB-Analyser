@@ -15,13 +15,14 @@ import time
 #testDir = "C:\Users\Gulliver\Canopy\Code\B\\"
 testDir = "C:\Users\Hanne Stawarz\Documents\Homework\UCL Giorgio\Y4\Code\Code_reworked\A\\"
 
-csvFile = "C:\Users\Hanne\Documents\UCL\Y4\master-analysis-01.csv"
+csvFile = "C:\Users\Hanne Stawarz\Documents\Homework\UCL Giorgio\Y4\Code\master-analysis-03.csv"
 
 # extra boundary around box, as a scale factor (e.g. 1.5 = 50% larger, 2 = 100% larger)
 boxMargin = 2
 
 # defines minimum box size - EBs smaller than this no of pixels not considered
 minBoxWidth = 4
+maxBoxWidth = 13
 
 # TODO: Calculate threshold intelligently...
 #
@@ -29,10 +30,13 @@ minBoxWidth = 4
 threshold = 200
 
 # Threshold brightness for detecting EBs in binary image (e.g. pixels brighter than this will be set to 255, otherwise 0)
-detectionThresholdVal = 50
+detectionThresholdVal = 30
 
 # Threshold determining how bright an EB stain should be to be considered viable
-aveBrightnessThreshold = 20
+aveBrightnessThreshold = 20 # used to be 20
+
+# Minimum brightness for a stack to have to be considered viable, in range 0 - 255
+minStackBrightness = 25 # used to be 25
 
 ## FUNCTIONS ###################################################################
 
@@ -54,11 +58,14 @@ def equalise(imArr):
     temp = imArr.copy()
     temp -= lowest
     highest = np.amax(temp)
-    r = 255.0 / highest
-    for x in range(0, width):
-        for y in range(0, height):
-            equalisedValue = temp[y,x] * r
-            temp[y,x] = int(equalisedValue)
+    if highest < minStackBrightness:
+        temp = None        
+    else:
+        r = 255.0 / highest
+        for x in range(0, width):
+            for y in range(0, height):
+                equalisedValue = temp[y,x] * r
+                temp[y,x] = int(equalisedValue)
     return temp
 
 def findCenter(imArr, width, height, threshold):
@@ -164,13 +171,13 @@ def eraseEB(img, minx, miny, maxx, maxy):
 
 def getCumulativeStack(imgs):
     # np.zeros 'initialises' the function with an empty array, size defined below
-    cum = np.zeros((512, 512))
+    cum = np.zeros((1024, 1024))
 
     # 
     for i in range (0, len(imgs)):
         # iterates through images in stack (in order), opens and resizes, converts to array and adds all together (cumulative i.e. cum)
         im = Image.open(imgs[i])
-        im.thumbnail((512, 512), Image.NEAREST)
+        #im.thumbnail((512, 512), Image.NEAREST)
         imArr = np.asarray(im)
         cum += imArr
     
@@ -182,6 +189,7 @@ def getEqualisedStack(imgs):
         
     # 
     cum = equalise(cum)
+    Image.fromarray(cum).show()
     return cum
 
 def processImg(img):
@@ -191,8 +199,13 @@ def processImg(img):
 
     # converts to array, defines as imArr and equalises using prior function
     imArr = np.asarray(img)
+    
+    
     imArr = equalise(imArr)
 
+    # TODO This is terrible; need better error handling
+    if imArr is None:
+        return None, None, None, None, None
     #### THRESHOLD: AVERAGE VALUE APPROACH
     #threshold = getAverageValue(imArr, img.size[0], img.size[1])
     
@@ -252,7 +265,9 @@ def getCandidateEBs(eqMaxproj):
     # Creates blobs (easier for code to parse) by setting all pixels with brightness <100 as 0 (black) and all >100 as white (255)
     thresholded[thresholded < detectionThresholdVal] = 0 
     thresholded[thresholded >= detectionThresholdVal] = 255
-
+    Image.fromarray(thresholded).show()
+    ogThresholded = thresholded
+    
     #  Initialises empty array for ebs (later returned)   
     ebs = []
     
@@ -351,6 +366,12 @@ def getCandidateEBs(eqMaxproj):
                 if halfBoxWidth < minBoxWidth:
                     print "Disregarding undersized candidate EB at coordinates " + str(minx) + ", " + str(miny)
                     continue
+
+                if halfBoxWidth >= maxBoxWidth:
+                    print "Disregarding oversized candidate EB"
+                    continue
+                    
+                ebDiam = halfBoxWidth * 4;
                 
                 # Increases boxwidth by our defined safety margin (defined above as 1.5 i.e. 50% larger than native box size) 
                 halfBoxWidth *= boxMargin
@@ -387,11 +408,26 @@ def getCandidateEBs(eqMaxproj):
                 thisEB['yMin'] = int(yOrigin)
                 thisEB['xMax'] = int(xOrigin + boxWidth)
                 thisEB['yMax'] = int(yOrigin + boxWidth)
+                thisEB['pixelSize'] = ebDiam
+                thisEB['size'] = ebDiam * 16
                 
                 # appends EB dictionary with pertinent information/properties to the list 'ebs' which is returned below, can thus be analysed
                 ebs.append(thisEB)      
                 print "Found an EB at coordinates " + str(int(xOrigin)) + ", " + str(int(yOrigin))
-                           
+   
+    outImg = Image.fromarray(ogThresholded)
+    rgbimg = Image.new("RGB", outImg.size)
+    rgbimg.paste(outImg)
+                
+    draw = ImageDraw.Draw(rgbimg)
+    for eb in ebs:   
+        draw.line((eb['xMin'],eb['yMin'],eb['xMax'],eb['yMin']),fill="red",width=1)
+        draw.line((eb['xMax'],eb['yMin'],eb['xMax'],eb['yMax']),fill="red",width=1)
+        draw.line((eb['xMax'],eb['yMax'],eb['xMin'],eb['yMax']),fill="red",width=1)
+        draw.line((eb['xMin'],eb['yMax'],eb['xMin'],eb['yMin']),fill="red",width=1)
+    del draw
+    rgbimg.show()
+                   
     return ebs
 
 ### 
@@ -449,7 +485,7 @@ def findEachBrightestSlice(genSlices, polSlices, ebs):
     return ebs
            
 ### This function finds the centre of brightness for each stain, as well as the distance and angle between the two
-def processEBs(ebs):
+def processEBs(genChannel, polChannel, ebs):
     
     for eb in ebs:
     
@@ -458,23 +494,39 @@ def processEBs(ebs):
         # Crops the brightest slice to the constraints set by the max/min co-ordinates (includes 'safety margin' of 1.5)
         gChanImg = gChanSlice.crop((eb['xMin'],eb['yMin'],eb['xMax'],eb['yMax']))
         # Saves cropped image as property of EB dictionary (unique to each EB)
+
         eb['genChanImg'] = gChanImg
+        
+        # as above but for polar candidate channel
+        rChanSlice = Image.open(polChannel[eb['polMaxSlice']])
+        rChanImg = rChanSlice.crop((eb['xMin'],eb['yMin'],eb['xMax'],eb['yMax']))
+        eb['polChanImg'] = rChanImg  
+
         eb['genAveBrightness'] = getAverageValue(np.asarray(gChanImg), gChanImg.size[0], gChanImg.size[1])
         
         # Adds processImg function output as dictionary definitions to dictionary 'eb', includes:
         #genChanImgProcessed is final processed general channel image
         #genCobX and Y are X and Y co-ordinates of the centre of brightness
         #genCoBDist is the distance between the centre of the cropped EB and the centre of brightness
-        #genNumConsidered outputs how many pixels are considered when calculating the CoB, at the moment threshold is arbitrary but later this will be more informative (sorted threshold by descent)   
+        #genNumConsidered outputs how many pixels are considered when calculating the CoB, at the moment threshold is arbitrary but later this will be more informative (sorted threshold by descent)  
+
+        
         eb['genChanImgProcessed'], eb['genCoBX'], eb['genCoBY'], eb['genCoBDist'], eb['genNumConsidered'] = processImg(gChanImg)
         
-        # as above but for polar candidate channel
-        rChanSlice = Image.open(polChannel[eb['polMaxSlice']])
-        rChanImg = rChanSlice.crop((eb['xMin'],eb['yMin'],eb['xMax'],eb['yMax']))
-    
-        eb['polChanImg'] = rChanImg  
+        # TODO Need better error handling
+        if eb['genChanImgProcessed'] is None:
+            print "Failed on general channel processing of eb " + str(eb['id']) + "; too dark"
+            eb['failed'] = True
+            continue
+            
+
         eb['polAveBrightness'] = getAverageValue(np.asarray(rChanImg), rChanImg.size[0], rChanImg.size[1])      
         eb['polChanImgProcessed'], eb['polCoBX'], eb['polCoBY'], eb['polCoBDist'], eb['polNumConsidered'] = processImg(rChanImg)
+        
+        if eb['polChanImgProcessed'] is None:
+            print "Failed on candidate polar channel processing of eb " + str(eb['id']) + "; too dark"
+            eb['failed'] = True
+            continue
         
         # finds centre of image (not CoB)
         eb['xCenter'] = gChanImg.size[0] / 2
@@ -486,7 +538,7 @@ def processEBs(ebs):
         vGenNorm = np.linalg.norm(vGen)
         vGen[0] = vGen[0] / vGenNorm
         vGen[1] = vGen[1] / vGenNorm
-        
+
         # same for polar candidate channel
         vPol = np.array([ (eb['polCoBX'] - eb['xCenter']), (eb['polCoBY'] - eb['yCenter']) ])
         vPolNorm = np.linalg.norm(vPol)
@@ -498,11 +550,29 @@ def processEBs(ebs):
         angle = math.acos(dot)
         eb['angleDif'] = angle        
         
+        eb['failed'] = False
+        
     return ebs
 
 ###     
-def generateOutput(saveDir, ebs):
+def generateOutput(filename, saveDir, ebs):
     for eb in ebs:
+        
+        if eb['failed'] is True:
+            print "Could not process EB " + str(eb['id'])
+            eb['genChanImg'].save(saveDir + "eb-" + str(eb['id']) + "-general.png", 'PNG')
+            eb['polChanImg'].save(saveDir + "eb-" + str(eb['id']) + "-polarised.png", 'PNG')
+            
+            # opens analysis directory to save analysis text file per EB. A allows us to append to the file
+            f = open(saveDir + 'the-hell-file.txt', 'a')
+            f.write("//// EB " + str(eb['id']) + " Failed to process /////////////////////////\n\n")
+            f.close()
+                
+            continue
+        
+
+        
+        
         # saveDir is the directory redirected by pipistrelle, within which an analysis folder is created (stuff saved here)
         # cropped EB is saved in this directory named eb-[index from ID e.g. 0, 1, 2), -general and png (image type)
         # processed also saved - this cropped EB has its centre of brightness/CoI denoted by the line
@@ -526,6 +596,7 @@ def generateOutput(saveDir, ebs):
         f.write("   - CoB Dist: " + str(eb['genCoBDist']) + "\n")
         f.write("   - numConsidered: " + str(eb['genNumConsidered']) + "\n")
         f.write("   - maxSlice: " + str(eb['genMaxSlice']) + "\n")
+        f.write("   - Approx. size: " + str(eb['size']) + "\n")
         f.write("   - aveBrightness: " + str(eb['genAveBrightness']))
         if eb['genAveBrightness'] < aveBrightnessThreshold:
             f.write(" - BELOW THRESHOLD, POTENTIALLY NON-VIABLE")
@@ -552,8 +623,8 @@ def generateOutput(saveDir, ebs):
         pixelDist = math.sqrt(math.pow(xDist, 2) + math.pow(yDist, 2))
         pixelDist = pixelDist if pixelDist > 0 else pixelDist * -1
         
-        # Get pixel dist as a percentage of total image size
-        percentDist = (pixelDist / (eb['xMax'] - eb['xMin'])) * 100
+        # Get pixel dist as a percentage of EB diameter
+        percentDist = (pixelDist / eb['pixelSize']) * 100
         
         # Write CoB to file and percentage toooo
         f.write("  CoB Difference:   " + str(pixelDist) + " pixels (%.1f%% of eb width)\n\n" % percentDist)
@@ -563,55 +634,90 @@ def generateOutput(saveDir, ebs):
         csv = open(csvFile, 'a')
         csv.write(filename + "eb-" + str(eb['id']) + "," + str(eb['genCoBDist']) + "," + str(eb['genMaxSlice']) + "," + str(eb['polCoBDist']) + "," + str(eb['polMaxSlice']) + "," + str(pixelDist) + ",%.1f,%.1f,,\n" % (percentDist, angleDif))
         csv.close()
+
         
+def processFolder(folder):
+    # defines directory name as folder drag-dropped in (indexed as second 'argument')
+    workDir = folder + "\\"
+    #workDir = testDir
+
+    nameArr = workDir.split('\\')
+    filename = nameArr[len(nameArr)-4] + "-" + nameArr[len(nameArr)-3] + "-" + nameArr[len(nameArr)-2] + "-"
+
+    # saveDir adds folder 'analysis' to the workDir that was dragged
+    saveDir = workDir + "analysis\\"
+    if not os.path.exists(saveDir):
+        os.makedirs(saveDir)
+
+    # Want regex to recognise string of form '[anything]z[num][num]_ch00.tif'
+    gChannel = glob.glob(workDir + "*z[0-9][0-9]_ch00.tif")
+    rChannel = glob.glob(workDir + "*z[0-9][0-9]_ch01.tif")
+    bChannel = glob.glob(workDir + "*z[0-9][0-9]_ch02.tif")
+    
+    genChannel = gChannel
+    polChannel = rChannel if len(rChannel) else bChannel
+
+    # defines equalisedStack as result of getEqualisedStack function i.e. average of stack luminosity in green channel. Similar to a max projection
+    equalisedStack = getEqualisedStack(genChannel)
+    if equalisedStack is None:
+        print "Stack below brightness threshold! Disregarding"
+        return False
+
+    # Uses the 'max projection' from getequalisedstack within the getcandidateEBs function, to locate EBs in the image. Defines each as 'ebs' and prints for user
+    ebs = getCandidateEBs(equalisedStack)
+    #print ebs
+
+    # Calls function to find brightest slice per channel using EBs, which adds this info to the dictionary and prints it for user usage
+    ebs = findEachBrightestSlice(genChannel, polChannel, ebs)
+    #print ebs
+
+    # Crops EBs, finds CoB, distance between CoB and CoI, and finds angle between them (utilises other functions like findCentre)
+    ebs = processEBs(genChannel, polChannel, ebs)
+    #print ebs
+
+    #
+    generateOutput(filename, saveDir, ebs)
+    
+    return True
+
+                
 ## MAIN CODE ###################################################################         
 
-# defines directory name as folder drag-dropped in (indexed as second 'argument')
-workDir = sys.argv[1] + "\\"
-#workDir = testDir
+sourceFolder = sys.argv[1]
 
-nameArr = workDir.split('\\')
-filename = nameArr[len(nameArr)-4] + "-" + nameArr[len(nameArr)-3] + "-" + nameArr[len(nameArr)-2] + "-"
+NumberFailed = 0
+NumberSucceeded = 0
 
-# saveDir adds folder 'analysis' to the workDir that was dragged
-saveDir = workDir + "analysis\\"
-if not os.path.exists(saveDir):
-    os.makedirs(saveDir)
+for root, dirnames, filenames in os.walk(sourceFolder):
+    
+    dirPath = root.split('\\')
+    if dirPath[len(dirPath) - 1] == "analysis":
+        continue
+        
+    if len(filenames) > 0:
+        print "Processing " + dirPath[len(dirPath) - 2] + "/" + dirPath[len(dirPath) - 1]
+        try:
+            if processFolder(root):
+                print "Ta-dah!\n"
+                NumberSucceeded = NumberSucceeded + 1
+            else:
+                print "Uh-oh\n"
+                NumberFailed = NumberFailed + 1
+        except Exception, e:
+            exc_type, exc_value, exc_tb = sys.exc_info()
+            
+            print "Uh-oh - exception!\n"
+            print str(e) + " at line " + str(exc_tb.tb_lineno)
 
-# Want regex to recognise string of form '[anything]z[num][num]_ch00.tif'
-gChannel = glob.glob(workDir + "*z[0-9][0-9]_ch00.tif")
-rChannel = glob.glob(workDir + "*z[0-9][0-9]_ch01.tif")
-bChannel = glob.glob(workDir + "*z[0-9][0-9]_ch02.tif")
-
-genChannel = gChannel
-polChannel = rChannel if len(rChannel) else bChannel
-
-# defines equalisedStack as result of getEqualisedStack function i.e. average of stack luminosity in green channel. Similar to a max projection
-equalisedStack = getEqualisedStack(genChannel)
-
-# Uses the 'max projection' from getequalisedstack within the getCandidateEBs function, to locate EBs in the image. Defines each as 'ebs' and prints for user
-ebs = getCandidateEBs(equalisedStack)
-#print ebs
-
-# Calls function to find brightest slice per channel using EBs, which adds this info to the dictionary and prints it for user usage
-ebs = findEachBrightestSlice(genChannel, polChannel, ebs)
-#print ebs
-
-
-# Crops EBs, finds CoB, distance between CoB and CoI, and finds angle between them (utilises other functions like findCentre)
-ebs = processEBs(ebs)
-#print ebs
-
-#
-generateOutput(saveDir, ebs)
+            NumberFailed = NumberFailed + 1
+        
+#    for filename in fnmatch.filter(filenames, '*.tif'):
+#    matches.append(os.path.join(root, filename))
 
 print "\n\nRun successful - press any key to close this window"
+print "Number failed = " + str(NumberFailed)
+print "Number succeeded = " + str(NumberSucceeded)
+
 test = raw_input()
 
-#draw = ImageDraw.Draw(testImg)
-#for eb in ebs:
-#    draw.line((eb['x'],eb['y'],eb['x'] + eb['size'],eb['y']),fill="red",width=1)
-#    draw.line((eb['x'] + eb['size'],eb['y'],eb['x'] + eb['size'],eb['y'] + eb['size']),fill="red",width=1)
-#    draw.line((eb['x'] + eb['size'],eb['y'] + eb['size'],eb['x'],eb['y'] + eb['size']),fill="red",width=1)
-#    draw.line((eb['x'],eb['y'] + eb['size'],eb['x'],eb['y']),fill="red",width=1)
-#del draw
+
