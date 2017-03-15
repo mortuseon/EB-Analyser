@@ -1,0 +1,1604 @@
+//// RUN EXECUTED AT 03/12/17 12:59:07 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:02:11 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:20:12 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:23:57 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:23:09 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+//// RUN EXECUTED AT 03/12/17 13:25:30 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:26:25 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:27:38 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:28:33 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:29:12 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:30:14 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:30:49 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:32:26 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:33:39 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:35:27 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+//// RUN EXECUTED AT 03/12/17 13:37:34 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:38:08 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+//// RUN EXECUTED AT 03/12/17 13:38:31 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:39:29 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:42:23 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:42:39 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:42:51 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:44:44 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:46:22 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 15:59:11 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 13:36:48 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+//// RUN EXECUTED AT 03/12/17 16:12:26 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 16:21:04 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 16:21:52 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 16:22:03 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 16:23:16 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 16:38:58 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/12/17 16:39:44 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 17:28:04 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 17:28:34 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 17:54:44 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 18:09:06 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 18:14:56 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 18:16:04 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 18:18:08 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 18:19:02 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 19:23:33 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 23:45:22 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 23:45:36 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 23:46:04 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 23:46:29 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 23:47:34 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 23:48:48 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 23:49:29 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 23:50:01 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 23:51:01 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 23:52:16 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 23:54:41 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 23:55:20 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 23:55:57 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/14/17 23:57:02 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/15/17 00:03:58 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/15/17 00:06:29 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/15/17 00:13:22 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
+//// RUN EXECUTED AT 03/15/17 00:15:02 /////////////////////////
+// Using:
+//  - CoB threshold = 200
+//  - Average brightness threshold = 20
+//  - boxMargin = 2
+//  - minBoxWIdth = 4
+
+  General Stain:
+   - CoB Dist: 4.71547367584
+   - numConsidered: 62
+   - maxSlice: 13
+   - Approx. size: 704nm
+   - aveBrightness: 21
+
+  Candidate Polarised Stain:
+   - CoB Dist: 4.19610904439
+   - numConsidered: 72
+   - maxSlice: 11
+   - aveBrightness: 13 - BELOW THRESHOLD, POTENTIALLY NON-VIABLE
+
+  ----------------
+
+  Angle difference: 68.7156042995 degrees
+  CoB Difference:   2.52693955141 pixels (5.7% of eb width)
+
+////////////////////////////////////////////////////////////////
+
