@@ -7,44 +7,65 @@ import math
 import os
 import glob
 import time
-
-#### TODO
-# - Confidence
-# - Polarity judgement
+import winsound
+import win32com.client 
 
 ## USER VARIABLES ##############################################################
 
-# Directory to be used whilst running tests
-#testDir = "C:\Users\Hanne Stawarz\Documents\Homework\UCL Giorgio\Y4\Code\\"
-#testDir = "C:\Users\Gulliver\Canopy\Code\B\\"
-testDir = "C:\Users\Hanne Stawarz\Documents\Homework\UCL Giorgio\Y4\Code\Code_reworked\A\\"
+# OUTPUT FOLDER, CSV FILE, AND ERROR FILE
+outputDir = "C:\Users\Hanne Stawarz\Documents\EBOutput\\" # NOTE don't forget to end with \\
+csvFile = "C:\Users\Hanne Stawarz\Documents\EBOutput\output.csv"
+errFile = "C:\Users\Hanne Stawarz\Documents\EBOutput\err.txt"
+testDir = "C:\Users\Hanne Stawarz\Documents\\"
 
-csvFile = "D:\Gulliver\Projects\eb-analyser\master-analysis-03.csv"
+## EB RECOGNITION PARAMETERS ##
 
-errFile = "D:\Gulliver\Projects\eb-analyser\err.txt"
-
-# extra boundary around box, as a scale factor (e.g. 1.5 = 50% larger, 2 = 100% larger)
+# extra boundary around bounding box, as a scale factor (e.g. 1.5 = 50% larger, 2 = 100% larger)
 boxMargin = 2
 
 # defines minimum box size - EBs smaller than this no of pixels not considered
 minBoxWidth = 4
 maxBoxWidth = 16
 
-# TODO: Calculate threshold intelligently...
-#
-# currently considers only pixels exceeding this brightness value (where 0 = black and 255 = white)
+# Currently considers only pixels exceeding this brightness value (where 0 = black and 255 = white)
 threshold = 200
 
 # Threshold brightness for detecting EBs in binary image (e.g. pixels brighter than this will be set to 255, otherwise 0)
-detectionThresholdVal = 30
+detectionThresholdVal = 80 # Used to be 30, then 120, then 80
 
 # Threshold determining how bright an EB stain should be to be considered viable
 aveBrightnessThreshold = 20 # used to be 20
 
 # Minimum brightness for a stack to have to be considered viable, in range 0 - 255
-minStackBrightness = 25 # used to be 25
+minStackBrightness = 10 # used to be 25
 
-failedStainCount = 0;
+failedStainCount = 0
+
+minCircularity = 0.5
+
+## POLARITY SCORING PARAMETERS ##
+
+# Polarity Score Interval - given as proportion (e.g. 0.1 is 10%) of CoB difference
+ps0 = 0.06 #0.12
+ps1 = 0.1 #0.24
+ps2 = 0.16 #0.36
+
+## CONFIDENCE CALCULATION PARAMETERS ##
+
+# Max and min brightness levels to interpolate between
+brightnessUpper = 60
+brightnessLower = 20
+
+## CONFIDENCE WEIGHTINGS
+# 5 weights. thus equal weighting would be 1/5
+# NOTE: ALL WEIGHTINGS SHOULD ADD TO 1
+
+numConsideredWeight = 0.1
+brightnessWeight    = 0.225
+sizeWeight          = 0.25
+stainWeight         = 0.25
+circularityWeight   = 0.175
+
 
 ## FUNCTIONS ###################################################################
 
@@ -66,6 +87,7 @@ def equalise(imArr):
     temp -= lowest
     highest = np.amax(temp)
     if highest < minStackBrightness:
+        print "Below minstack brightness (%d)" % lowest
         temp = None
     else:
         r = 255.0 / highest
@@ -131,7 +153,7 @@ def findCenterByDescentPercentage(arr, threshold):
     cumSum = 0;
     for count in range(0, len(arr)):
         cumSum += arr[count][2]
-        if cumSum > threshold:
+        if cumSum > threshold and arr[count][2] < 250:
             break
 
         r = float(arr[count][2]) / (weight + arr[count][2])
@@ -170,8 +192,8 @@ def findCenterByDescent(arr, threshold, brightness):
     return cX, cY, count
 
 def eraseEB(img, minx, miny, maxx, maxy):
-    for y in range(miny, maxy):
-        for x in range(minx, maxx):
+    for y in range(miny, maxy+1):
+        for x in range(minx, maxx+1):
             img[y, x] = 0
 
     return img
@@ -201,6 +223,9 @@ def getEqualisedStack(imgs):
 def processImg(img):
 
     # converts to luminosity
+    if convertFlag:
+        img = img.convert('I')
+        
     img = img.convert('L')
 
     # converts to array, defines as imArr and equalises using prior function
@@ -209,9 +234,10 @@ def processImg(img):
 
     imArr = equalise(imArr)
 
-    # TODO This is terrible; need better error handling
+    # TODO better error handling needed
     if imArr is None:
-        return None, None, None, None, None
+        return None, None, None, None, None, None, None
+        
     #### THRESHOLD: AVERAGE VALUE APPROACH
     #threshold = getAverageValue(imArr, img.size[0], img.size[1])
 
@@ -229,6 +255,23 @@ def processImg(img):
 
     cobX, cobY, numConsidered = findCenterByDescentPercentage(sortedArray, threshold)
 
+    meanBrightness = 0
+    numNonBlack = 0
+
+    for y in range(0, img.size[1]):
+        for x in range(0, img.size[0]):
+            if imArr[y, x] > 0:
+                numNonBlack += 1
+                meanBrightness += imArr[y,x]
+    
+    if numNonBlack > 0:
+        meanBrightness = meanBrightness / numNonBlack
+    else:
+        meanBrightness = 0
+
+    brightnessRatio = numNonBlack / float(img.size[0] * img.size[1])
+
+    print "BRIGHTNESS RATIO IS %.2f" % (numNonBlack / float(img.size[0] * img.size[1]))
 
     #### THRESHOLD: TOP 10% APPROACH
     # img = img.convert(L)
@@ -256,23 +299,57 @@ def processImg(img):
 
     # NOTE: will be calculated in future; for now, dummy value of 0 (ignore)
 
-    return rgbimg, cobX, cobY, dist, numConsidered
+    return rgbimg, cobX, cobY, dist, numConsidered, meanBrightness, brightnessRatio
+
+def fillHoles(thresholded, minNeighbours):
+    
+    filled = thresholded.copy()
+    
+    for y in range(1,511):
+        for x in range(1, 511):
+            if thresholded[y, x] == 0:
+                value = int(thresholded[y-1,x]) + int(thresholded[y,x-1]) + int(thresholded[y+1,x]) + int(thresholded[y,x+1])
+                if (value / 255) >= minNeighbours:
+                    filled[y,x] = 255
+    return filled
+            
+    
+def removeNoise(thresholded, minNeighbours):
+    denoised = thresholded.copy()
+    
+    for y in range(1,511):
+        for x in range(1, 511):
+            if thresholded[y, x] == 255:
+                value = int(thresholded[y-1,x]) + int(thresholded[y,x-1]) + int(thresholded[y+1,x]) + int(thresholded[y,x+1])
+                if (value / 255) < minNeighbours:
+                    denoised[y,x] = 0
+    return denoised
 
 def getCandidateEBs(eqMaxproj):
 
     # Created (new) temporary image 'object' from the 2D array equalised stack ('max projection') and defines as 'temp'. Converts temp to luminosity only* could remove
     # Converts...back to array (grey) and copies it
     temp = Image.fromarray(eqMaxproj)
+    if convertFlag:
+        temp = temp.convert('I')
     gray = temp.convert('L')
 
     thresholded = np.asarray(gray).copy()
 
-    # Creates blobs (easier for code to parse) by setting all pixels with brightness <100 as 0 (black) and all >100 as white (255)
+    # Create 'blobs' by setting all pixels with brightness <detectionThreshold as 0 (black) and all >detectionThreshold as white (255)
     thresholded[thresholded < detectionThresholdVal] = 0
     thresholded[thresholded >= detectionThresholdVal] = 255
-    #Image.fromarray(thresholded).show()
+
     ogThresholded = thresholded
 
+    # Clean up thresholded image by filling small gaps and removing lone pixels
+    # (Note the order of operations below have been defined arbitrarily)
+    thresholded = fillHoles(thresholded, 2)
+    thresholded = fillHoles(thresholded, 2)
+    thresholded = removeNoise(thresholded,2)               
+    thresholded = fillHoles(thresholded, 3)
+    thresholded = removeNoise(thresholded,3)        
+    
     #  Initialises empty array for ebs (later returned)
     ebs = []
 
@@ -297,69 +374,79 @@ def getCandidateEBs(eqMaxproj):
 
                 yTemp = y
                 xTemp = x
+                
+                rightFound = False
+                leftFound = False
+                bottomFound = False
+                
+                #  Starting from the top edge, expand the bounding box left, right, and down until it encompasses the EB
+                while not (rightFound and leftFound and bottomFound):
+                    
+                    # Expand to the right
+                    yTemp = miny
+                    while yTemp <= maxy:
 
-                # value of yTemp is increased when a white pixel is found, i.e. moves down in image to check for brightness neighbours
-                while thresholded[yTemp + 1, xTemp] == 255:
-
-                    yTemp += 1
-
-                    # Abort if you hit the bottom edge
-                    if ((yTemp + 1) == 512):
-                        break
-
-                    # xTempLeft evaluates neighbours 1 pixel to the left of xTemp and will move only if it finds a white pixel. Helps to define leftmost boundary
-                    # Then minx is set as the lowest x co-ordinate found by xTempLeft, i.e. the leftmost white pixel (left boundary)
-                    # (Note that it doesn't bother if it is at an edge)
-                    if (xTemp > 0):
-                        xTempLeft = xTemp - 1
-                        while thresholded[yTemp, xTempLeft] == 255:
-                            if xTempLeft > 0:
-                                xTempLeft -= 1
-                            else:
-                                break
-
-                        if xTempLeft < minx:
-                            minx = xTempLeft
-
-                    # Does same as above except this is a temporary value scanning right, i.e. defines rightmost boundary and sets as maxX
-                    if (xTemp < 511):
-                        xTempRight = xTemp + 1
-                        while thresholded[yTemp, xTempRight] == 255:
-                            if xTempRight < 511:
-                                xTempRight += 1
-                            else:
-                                break
-                        if xTempRight > maxx:
-                            maxx = xTempRight
-                    # maxY is initially named as the lowest white pixel found thus far - needs to be verified
-                maxy = yTemp
-
-                #  Need to verify that we've found the lowest point (max y) of the EB
-                #  If maxy == 512, then maxYFound = true, and we're at the bottom of the image; not possible to go deeper
-                maxYFound = (maxy == 511)
-                while not maxYFound:
-
-                    # Move from left to right (minx to maxx) along this row
-                    for i in range(minx, maxx + 1):
-                        #  If you see any white, increment yTemp to look at next row, and start from the left-hand side again
-                        if(thresholded[yTemp + 1, i] == 255):
-                            yTemp += 1
+                        if maxx + 1 == 512:
+                            rightFound = True
                             break
-                        # If you made it all the way to the right without seeing a white pixel, then the row above was the bottom row
-                        elif (i == maxx):
-                            maxYFound = True
+                            
+                        if thresholded[yTemp, maxx + 1] == 255:
+                            maxx += 1
+                            bottomFound = False
+                            yTemp = miny
+                            continue
+                        elif yTemp == maxy:
+                            rightFound = True
 
-                # Set maxy to new ytemp
-                maxy = yTemp
+                        yTemp += 1
+                    
+                    # Expand to the left
+                    yTemp = miny
+                    while yTemp <= maxy:
+
+                        if minx == 0:
+                            leftFound = True
+                            break
+
+                        if thresholded[yTemp, minx - 1] == 255:
+                            minx -= 1
+                            bottomFound = False
+                            yTemp = miny
+                            continue
+                        elif yTemp == maxy:
+                            leftFound = True
+                            
+                        yTemp += 1
+
+                        
+                    # Expand to the bottom
+                    xTemp = minx
+                    while xTemp <= maxx:
+
+                        if maxy == 511:
+                            bottomFound = True
+                            break
+
+                        if thresholded[maxy + 1, xTemp] == 255:
+                            maxy += 1
+                            leftFound = False
+                            rightFound = False
+                            xTemp = minx
+                            continue
+                        elif xTemp == maxx:
+                            bottomFound = True
+                            
+                        xTemp += 1
+                    
 
                 # Ignore if it's an edge boi
                 if maxx == 511 or maxy == 511 or minx == 0:
-                    print "Disregarding EB at edge of image, coordinates " + str(minx) + ", " + str(miny)
+                    print "DISREGARDING: EB at edge of image, coordinates " + str(minx) + ", " + str(miny)
                     continue
 
                 # Defines box size (width and height via x and y co-ordinates on either side). Radius via dividing by 2
-                hDist = (maxx - minx) / 2
-                vDist = (maxy - miny) / 2
+                hDist = (maxx - minx + 1) / 2.0
+                vDist = (maxy - miny + 1) / 2.0
 
                 # Makes halfBoxWidth the largest dimension, whether that be horizontal or vertical
                 halfBoxWidth = hDist if hDist > vDist else vDist
@@ -376,22 +463,30 @@ def getCandidateEBs(eqMaxproj):
                 # Replace thresholded image with new image in which the EB is erased, to prevent the algorithm identifying a 'new' EB at each row (which is actually the same EB)
                 thresholded = eraseEB(thresholded, minx, miny, maxx, maxy)
 
-                # If the actual EB isn't within 80% of the spherical shape, mark it non-spherical and disregard
-                if(areaSum / estArea < 0.75):
-                    print "Disregarding EB at " + str(minx) + ", " + str(miny) + " due to non-circular shape (may be overlap)"
-                    continue
-
                 # defined above as arbitrary minimum size of EB, below which identified spots are ignored/not boxed
                 if halfBoxWidth < minBoxWidth:
-                    print "Disregarding undersized candidate EB at coordinates " + str(minx) + ", " + str(miny)
+                    print "DISREGARDING: undersized candidate EB at coordinates " + str(minx) + ", " + str(miny)
                     continue
 
                 if halfBoxWidth >= maxBoxWidth:
-                    print "Disregarding oversized candidate EB"
+                    print "DISREGARDING: oversized candidate EB"
+                    continue
+
+                # Check difference of area to expected area to assess circularity
+                # If perfect match, score is 1
+                print "maxx: %d; minx: %d; maxy: %d; miny: %d" % (maxx, minx, maxy, miny)
+                print "radius: %d; hDist: %.1f; vDist: %.1f; estArea: %.2f, areaSum: %d" % (halfBoxWidth, hDist, vDist, estArea, areaSum)
+                circularity = 1.0 - math.fabs((float(areaSum) / float(estArea)) - 1.0)
+                if circularity < minCircularity:
+                    print "DISREGARDING: EB at " + str(minx) + ", " + str(miny) + " non-circular with score %f (may be overlap)" % circularity
                     continue
 
                 # Store diameter before scaling box by margin
                 ebDiam = halfBoxWidth * 4
+                
+                if (ebDiam * 16) > 1000:
+                    print "DISREGARDING: suspected RB of size %dnm" % (ebDiam * 16)
+                    continue
 
                 # Increases boxwidth by our defined safety margin (defined above as 1.5 i.e. 50% larger than native box size)
                 halfBoxWidth *= boxMargin
@@ -406,7 +501,7 @@ def getCandidateEBs(eqMaxproj):
 
                 # TODO do this more neatly.. avoids crashing on negative index
                 if xOrigin < 0 or yOrigin < 0:
-                    print "Edge boyyy"
+                    print "DISREGARDING: Edge boy"
                     continue
 
                 # Multiply by two to get the full box width
@@ -426,10 +521,11 @@ def getCandidateEBs(eqMaxproj):
                 # int de-floats. Defines values in dictionary (defines object properties) such as xmin as those identified above, can be used to draw box, identify centre
                 thisEB['xMin'] = int(xOrigin)
                 thisEB['yMin'] = int(yOrigin)
-                thisEB['xMax'] = int(xOrigin + boxWidth)
-                thisEB['yMax'] = int(yOrigin + boxWidth)
+                thisEB['xMax'] = min(int(xOrigin + boxWidth), 1023)
+                thisEB['yMax'] = min(int(yOrigin + boxWidth), 1023)
                 thisEB['pixelSize'] = ebDiam
                 thisEB['pixelArea'] = areaSum
+                thisEB['circularity'] = circularity
                 thisEB['size'] = ebDiam * 16
 
                 # appends EB dictionary with pertinent information/properties to the list 'ebs' which is returned below, can thus be analysed
@@ -447,11 +543,10 @@ def getCandidateEBs(eqMaxproj):
         draw.line((eb['xMax'],eb['yMax'],eb['xMin'],eb['yMax']),fill="red",width=1)
         draw.line((eb['xMin'],eb['yMax'],eb['xMin'],eb['yMin']),fill="red",width=1)
     del draw
-    #rgbimg.show()
 
     return ebs
 
-###
+### Find index of brightest slice for each stain
 def findEachBrightestSlice(genSlices, polSlices, ebs):
     for eb in ebs:
 
@@ -463,6 +558,13 @@ def findEachBrightestSlice(genSlices, polSlices, ebs):
         # Initialised to -1 just to identify a failed run; will be overwritten immediately. Not initialised as zero (zero may falsely appear as valid value)
         genBrightestSlice = -1
         polBrightestSlice = -1
+        
+        dim = 1024
+        
+        genProj = np.zeros((dim, dim))
+        genProjCount = 0
+        polProj = np.zeros((dim, dim))
+        polProjCount = 0
 
         # iterates through each slice, length defined by number of z_00 etc
         for i in range (0, len(genSlices)):
@@ -472,6 +574,8 @@ def findEachBrightestSlice(genSlices, polSlices, ebs):
             # Opens the general slice - [i] defines iteration
             curGenSlice = Image.open(genSlices[i])
             # Converts to luminosity
+            if convertFlag:
+                curGenSlice = curGenSlice.convert('I')
             curGenSlice = curGenSlice.convert('L')
             # Converts to array so calculations can be performed (array per slice)
             curGenSlice = np.asarray(curGenSlice)
@@ -479,14 +583,24 @@ def findEachBrightestSlice(genSlices, polSlices, ebs):
             # same as above but in polar candidate channel
             curPolSum = 0;
             curPolSlice = Image.open(polSlices[i])
+            if convertFlag:
+                curPolSlice = curPolSlice.convert('I')
             curPolSlice = curPolSlice.convert('L')
             curPolSlice = np.asarray(curPolSlice)
 
-            # Looks within box range (co-ordinates defined previously), adds pixel brightness to total box brightness per slice
+            # Looks within box range (co-ordinates defined previously), adds pixel brightness to total box brightness per slice                        
             for x in range (eb['xMin'], eb['xMax']):
                 for y in range (eb['yMin'], eb['yMax']):
                     curGenSum += curGenSlice[y, x]
                     curPolSum += curPolSlice[y, x]
+
+            # Add to cumulative slicebit thing
+            if curGenSum > 10:
+                genProjCount += 1
+                genProj += curGenSlice
+            if curPolSum > 10:
+                polProjCount += 1
+                polProj += curPolSlice
 
             # curGenSum is sum of pixel values within EB box (gen stain) - if a higher brightness is found, this now becomes curMaxBrightnessGen
             # brightest slice is also set to 'i'
@@ -498,12 +612,56 @@ def findEachBrightestSlice(genSlices, polSlices, ebs):
             if curPolSum > curMaxBrightnessPol:
                 curMaxBrightnessPol = curPolSum
                 polBrightestSlice = i
+        
+        #genProj /= float(genProjCount)
+        #polProj /= float(polProjCount)
+        
+        #genProj = equalise(genProj)
+        #polProj = equalise(polProj)
+        
+        eb['genProj'] = genProj
+        eb['polProj'] = polProj
+    
+        # TODO trialling new method, leaving commented out for now...
+        """
+        print "Getting brightness values..."
+        
+        # Get the mean brightness for the best slices                    
+        meanBrightnessPol = 0
+        meanBrightnessGen = 0
+        numNonBlackPol = 0
+        numNonBlackGen = 0
+        
+        curGenSlice = Image.open(genSlices[genBrightestSlice])
+        curGenSlice = curGenSlice.convert('L')
+        curGenSlice = np.asarray(curGenSlice)
+        curGenSlice = equalise(curGenSlice)
+        
+        curPolSlice = Image.open(polSlices[polBrightestSlice])
+        curPolSlice = curPolSlice.convert('L')
+        curPolSlice = np.asarray(curPolSlice)
+        curPolSlice = equalise(curPolSlice)
+        
+        for y in range(eb['yMin'], eb['yMax']):
+            for x in range (eb['xMin'], eb['xMax']):
+                if curGenSlice[y, x] > 0:
+                    numNonBlackGen += 1
+                    meanBrightnessGen += curGenSlice[y,x]
+                if curPolSlice[y,x] > 0:
+                    numNonBlackPol += 1
+                    meanBrightnessPol += curPolSlice[y,x]
+        
+        if numNonBlackGen > 0:
+            meanBrightnessGen /= numNonBlackGen
+        if numNonBlackPol > 0:
+            meanBrightnessPol /= numNonBlackPol
+        """
 
         # Creates new property in dictionary (the brightest slice index in a stack e.g. z_10) assigned from analysis above. For each stain
         eb['genMaxSlice'] = genBrightestSlice
-        eb['genBrightness'] = curMaxBrightnessGen
+
         eb['polMaxSlice'] = polBrightestSlice
-        eb['polBrightness'] = curMaxBrightnessPol
+
 
     return ebs
 
@@ -514,16 +672,26 @@ def processEBs(genChannel, polChannel, ebs):
 
         # Opens brightest slice in the general channel, indexed in genMaxSlice dictionary property
         gChanSlice = Image.open(genChannel[eb['genMaxSlice']])
+
+        
         # Crops the brightest slice to the constraints set by the max/min co-ordinates (includes 'safety margin' of 1.5)
         gChanImg = gChanSlice.crop((eb['xMin'],eb['yMin'],eb['xMax'],eb['yMax']))
         # Saves cropped image as property of EB dictionary (unique to each EB)
 
-        eb['genChanImg'] = gChanImg
+        eb['genChanImg'] = gChanImg.convert(mode="RGB")
+        
+        if convertFlag:
+            gChanImg = gChanImg.convert('I')
 
         # as above but for polar candidate channel
         rChanSlice = Image.open(polChannel[eb['polMaxSlice']])
+
+        
+        
         rChanImg = rChanSlice.crop((eb['xMin'],eb['yMin'],eb['xMax'],eb['yMax']))
-        eb['polChanImg'] = rChanImg
+        eb['polChanImg'] = rChanImg.convert(mode="RGB")
+        if convertFlag:
+            rChanImg = rChanImg.convert('I')
 
         eb['genAveBrightness'] = getAverageValue(np.asarray(gChanImg), gChanImg.size[0], gChanImg.size[1])
 
@@ -532,9 +700,8 @@ def processEBs(genChannel, polChannel, ebs):
         #genCobX and Y are X and Y co-ordinates of the centre of brightness
         #genCoBDist is the distance between the centre of the cropped EB and the centre of brightness
         #genNumConsidered outputs how many pixels are considered when calculating the CoB, at the moment threshold is arbitrary but later this will be more informative (sorted threshold by descent)
-
-
-        eb['genChanImgProcessed'], eb['genCoBX'], eb['genCoBY'], eb['genCoBDist'], eb['genNumConsidered'] = processImg(gChanImg)
+        
+        eb['genChanImgProcessed'], eb['genCoBX'], eb['genCoBY'], eb['genCoBDist'], eb['genNumConsidered'], eb['genBrightness'], eb['genBrightnessRatio'] = processImg(gChanImg)
 
         # TODO Need better error handling
         if eb['genChanImgProcessed'] is None:
@@ -544,7 +711,7 @@ def processEBs(genChannel, polChannel, ebs):
 
 
         eb['polAveBrightness'] = getAverageValue(np.asarray(rChanImg), rChanImg.size[0], rChanImg.size[1])
-        eb['polChanImgProcessed'], eb['polCoBX'], eb['polCoBY'], eb['polCoBDist'], eb['polNumConsidered'] = processImg(rChanImg)
+        eb['polChanImgProcessed'], eb['polCoBX'], eb['polCoBY'], eb['polCoBDist'], eb['polNumConsidered'], eb['polBrightness'], eb['polBrightnessRatio'] = processImg(rChanImg)
 
         if eb['polChanImgProcessed'] is None:
             print "Failed on candidate polar channel processing of eb " + str(eb['id']) + "; too dark"
@@ -606,6 +773,17 @@ def processEBs(genChannel, polChannel, ebs):
 
     return ebs
 
+
+###
+
+def getBrightnessScore(brightness):
+    if brightness < brightnessLower:
+        return 0.0
+    elif brightness > brightnessUpper:
+        return 1.0
+    else:
+        return (brightness - brightnessLower) / float(brightnessUpper - brightnessLower)
+
 ###
 def generateOutput(filename, saveDir, ebs, stainQuality):
     for eb in ebs:
@@ -621,8 +799,6 @@ def generateOutput(filename, saveDir, ebs, stainQuality):
             f.close()
 
             continue
-
-
 
 
         # saveDir is the directory redirected by pipistrelle, within which an analysis folder is created (stuff saved here)
@@ -669,14 +845,34 @@ def generateOutput(filename, saveDir, ebs, stainQuality):
 
         # Get x distance and y distance between genCoB and polCoB
         xDist = eb['genCoBX'] - eb['polCoBX']
-        yDist = eb['genCoBX'] - eb['polCoBY']
+        yDist = eb['genCoBY'] - eb['polCoBY']
+        
+        print "xDist: %d, yDist: %d" % (xDist, yDist)
+        
+        xDistCenter = (eb['genChanImg'].size[0]/2.0) - eb['polCoBX']
+        yDistCenter = (eb['genChanImg'].size[0]/2.0) - eb['polCoBY']
+        
+        print "xDistCenter: %d, yDistCenter: %d" % (xDistCenter, yDistCenter)
 
         # Use pythag to calc distance between CoBs, and check that it's positive (force it to be positive)
-        pixelDist = math.sqrt(math.pow(xDist, 2) + math.pow(yDist, 2))
-        pixelDist = pixelDist if pixelDist > 0 else pixelDist * -1
+        pixelDistCoB = math.sqrt(math.pow(xDist, 2) + math.pow(yDist, 2))
+        pixelDistCenter = math.sqrt(math.pow(xDistCenter, 2) + math.pow(yDistCenter, 2))
+        
+        pixelDistWeight = 1.0
+        
+        # Take the largest of the dist to the other CoB or the dist to the center
+        # Approximate fix for some issues but NEEDS REFINEMENT
+        if pixelDistCoB < pixelDistCenter:
+            print "pixeldistcenter better: %d" % pixelDistCenter
+        else:
+            pixelDistWeight = 1.5 - (0.5 * (pixelDistCenter/pixelDistCoB))
+            print "pixeldist better: %d, weight %.2f" % (pixelDistCoB, pixelDistWeight)
+            
+        pixelDist = pixelDistCoB if pixelDistCoB > pixelDistCenter else pixelDistCenter
+        
 
         # Get pixel dist as a percentage of EB diameter
-        percentDist = (pixelDist / eb['pixelSize']) * 100
+        percentDist = (pixelDist / float(eb['pixelSize'])) * 100
 
 
         # Write CoB to file and percentage toooo
@@ -684,78 +880,190 @@ def generateOutput(filename, saveDir, ebs, stainQuality):
         f.write("////////////////////////////////////////////////////////////////\n\n")
         f.close()
 
-        # sliceDif
+        # sliceDif (note, unused for now)
         sliceDif = int(math.fabs(eb['genMaxSlice'] - eb['polMaxSlice']))
 
-        # Polarity Score
-        # Depends on CoB distance only?
-        # 0-10%: 0
-        # 10-25%: 1
-        # 25-40%: 2
-        # 40%+: 3
 
-        polarityScore = 0
-        propDist = percentDist / 100.0
-        # SliceDif?
-        if propDist < 0.3:
-            if propDist < 0.2:
-                if propDist < 0.1:
+        # Get brightness scores for both stains and calculate brightnessfactor
+        polBrightnessScore = getBrightnessScore(eb['polBrightness'])
+        genBrightnessScore = getBrightnessScore(eb['genBrightness'])
+                
+        brightnessFactor = (genBrightnessScore + polBrightnessScore) / 2.0
+
+        # Apply brightness ratio to stainQuality        
+        if eb['genBrightness'] > eb['polBrightness']:
+            stainQuality *= (eb['polBrightness'] / float(eb['genBrightness']))
+        else:
+            stainQuality *= (eb['genBrightness'] / float(eb['polBrightness']))
+
+
+        #print "brightness pol: %d, gen %d" % (eb['polBrightness'], eb['genBrightness'])
+
+
+        # Circularity Factor - anything above 0.5 is an automatic 1
+        # See notes on circularity in GetCandidateEBs
+        circularityFactor = (eb['circularity'] - 0.5) * 2
+
+        # Size Factor
+        # NOTE: brightness of gen channel may say something about size, TODO
+        sizeFactor = 0
+        
+        # decrease linearly between 500 and 1000
+        if eb['size'] > 200 and eb['size'] < 1000:
+            if eb['size'] > 500:
+                print "size: %d" % eb['size']
+                sizeFactor = 1.0 - (((eb['size']-500) / 500.0) * circularityFactor)
+            else:
+                sizeFactor = 1.0       
+                
+        # Adapt size factor depending on circularity confidence?
+        
+        # Calculate confidence with weightings applied
+        # Brightness and quality of stain are used because they may preclude judgement
+        # Circularity, numconsidered, and size may depend on polary; brightness and quality shouldn't.
+        capability = (brightnessFactor * brightnessWeight) + (stainQuality * stainWeight)
+        subWeights = (brightnessWeight + stainWeight)
+        capability *= 1.0/subWeights
+
+
+        # Get angleDifWeight also
+        # Square weight to reward the more oppositional centroids
+        angleDifWeight = 1.0 + (angleDif / 180.0)
+        angleDifWeight *= angleDifWeight
+
+        # Get average brightness ratio as additional weight
+        # TODO Integrate this more fully; was a quick-fix for testing
+        brightnessRatio = (eb['genBrightnessRatio'] + eb['genBrightnessRatio']) / 2.0
+        if brightnessRatio > 0.5:
+            if brightnessRatio > 0.8:
+                brghtwght = (1.0 - brightnessRatio) / 0.2
+            else:
+                brghtwght = 1.0
+        else:
+            brghtwght = brightnessRatio / 0.5
+        
+        # REFACTORING NEEDED - propDist is the raw polarity score
+        propDist = angleDifWeight * (percentDist / 100.0) * capability * circularityFactor * brghtwght
+
+        # Get integer rating based on score & given thresholds (given at top of file)
+        if propDist < ps2:
+            if propDist < ps1:
+                if propDist < ps0:
                     polarityScore = 0
                 else:
-                    polarityScore = 1
+                    polarityScore = 1 
             else:
                 polarityScore = 2
         else:
-            polarityScore = 3
+            polarityScore = 3   
 
-        # eb['genNumConsidered'] and polNumConsidered, get them as percentages
-        # numConsidered links to confidence; greater confidence if numConsidered
-        # is high and polarity score is low and vice versa?
-        # Confidence
-        # Depends on brightness of stains, slice dif, background noise, CoB dist from geom center
-        # Consider using spherical measure in later tests?
-        # Also size above 600nm
-        brightnessFactor = 1
-        if eb['genBrightness'] < eb['polBrightness']:
-            brightnessFactor = (eb['genBrightness'] / float(eb['polBrightness']))
-        else:
-            brightnessFactor = (eb['polBrightness'] / float(eb['genBrightness']))
-
-        sizeFactor = 1
-        # decrease linearly between 600 and 900
-        if eb['size'] > 600 and eb['size'] < 1000:
-            sizeFactor = max(0, 1.0-((eb['size'] - 600) / 400.0))
-
-        # Get number considered for candidate polar stain relative to number of pixels in EB
+        
+        # NOTE Need new way of getting numConsideredFactor weighting which doesn't rely on polarity score
         numConsideredFactor = 1
-        numConsideredProportion = eb['polNumConsidered'] / float(eb['pixelArea'])
+        numConsideredProportion = (eb['polNumConsidered'] / float(eb['pixelArea'])) + (eb['genNumConsidered'] / float(eb['pixelArea']))
         if numConsideredProportion < 0.15:
-            numConsideredFactor = float(polarityScore / 3.0)
+            numConsideredFactor = float((polarityScore - 1) / 3.0)
         elif numConsideredProportion < 0.25:
-            numConsideredFactor = (3 - abs(polarityScore - 2)) / 3.0
+            numConsideredFactor = (3 - abs(polarityScore - 3)) / 3.0
         elif numConsideredProportion < 0.4:
-            numConsideredFactor = (3 - abs(polarityScore - 1)) / 3.0
+            numConsideredFactor = (3 - abs(polarityScore - 2)) / 3.0
         else:
-            numConsideredFactor = float(1 - (polarityScore  / 3.0))
+            numConsideredFactor = float(1 - ((polarityScore-1)  / 3.0))
+        
+        confidence = (capability * (subWeights/1.0)) + (numConsideredFactor * numConsideredWeight) + (circularityFactor * circularityWeight) + (sizeFactor * sizeWeight)
 
-        confidence = (brightnessFactor + sizeFactor + numConsideredFactor + stainQuality) / 4
-        confidenceStr = "%.1f" % (confidence)
-        print str(brightnessFactor) + " * " + str(sizeFactor) + " * " + str(numConsideredFactor) + " * " + str(stainQuality) + " gives confidence " + confidenceStr
+        #confidenceStr = "%.2f" % (confidence)
+#        print "bri: " + str(brightnessFactor) + " , size: " + str(sizeFactor) + ", density: " + str(numConsideredFactor) + ", stain: " + str(stainQuality) + ", circularity: " + str(circularityFactor) + ": gives confidence " + confidenceStr
+
+        
+        # Ave brightness ratio:
+        aveBrightnessRatio = (eb['genBrightnessRatio'] + eb['genBrightnessRatio']) / 2.0
 
         # Write to CSV
-        # Fields: File Name,Gen CoB Dist,Gen Max Slice,Pol CoB Dist,Pol Max Slice,CoB Difference,CoB Difference as %,Angle Difference,Slice Difference,Size,Direction,Polarity Score,Confidence
-        csv = open(csvFile, 'a')
-        csv.write(filename + "eb-" + str(eb['id']) + "," + str(eb['genCoBDist']) + "," + str(eb['genMaxSlice']) + "," + str(eb['polCoBDist']) + "," + str(eb['polMaxSlice']) + "," + str(pixelDist) + "," + str(round(percentDist,1)) + "," + str(round(angleDif,1)) + "," + str(sliceDif) + "," + str(eb['size']) + "," + str(eb['polarityDir']) + "," + str(polarityScore) + "," + confidenceStr + "\n")
+        fields = (capability, angleDif, angleDifWeight, percentDist/100.0, propDist, brightnessFactor, stainQuality, eb['genBrightness'], eb['polBrightness'], aveBrightnessRatio, pixelDistCoB, pixelDistCenter, sizeFactor, numConsideredFactor, circularityFactor, polarityScore, confidence)
+        output_string = filename + "eb-" + str(eb['id']) + ",%.2f,%.1f,%.2f,%.2f,%.3f,%.2f,%.2f,%d,%d,%.2f,%.4f, %.4f,%.2f,%.2f,%.2f,%d,%.2f\n" % fields
+        
+        # Create the output directory if not exists
+        if not os.path.exists(outputDir):
+            os.makedirs(outputDir)
+            csv = open(outputDir + "full-set.csv", "a")
+            # Write header line
+            csv.write("eb ID,capability,angleDif,angleDifWeight,percentDist,weightedDist,brightnessFactor,stainQuality,maxGenBrightness,maxPolBrightness,aveBrightnessRatio,pixelDistCoB,pixelDistCenter,sizeFactor,numConsideredFactor,circularityFactor,polarityRating,confidence\n")
+            csv.close()
+        
+        # Write to full set file first
+        csv = open(outputDir + "full-set.csv", 'a')
+        csv.write(output_string)
         csv.close()
+        
+        # Then write to marker-specific file
+        thisDir = outputDir + "Unknown\\"
+        
+        if "MOMP" in filename or "Momp" in filename or "momp" in filename:            
+            if "OmcB1" in filename:
+                thisDir = outputDir + "OmcB1_MOMP\\"
+            elif "OmcB2" in filename:
+                thisDir = outputDir + "OmcB2_MOMP\\"
+            elif "Ctad1" in filename:
+                thisDir = outputDir + "Ctad1_MOMP\\"
+            else:
+                thisDir = outputDir + "MOMP\\"
+        elif "OmcB" in filename:
+            if "OmcB1" in filename:
+                thisDir = outputDir + "OmcB1\\"
+            elif "OmcB2" in filename:
+                thisDir = outputDir + "OmcB2\\"
+            elif "OmcB3" in filename:
+                thisDir = outputDir + "OmcB3\\"
+            else:
+                thisDir = outputDir + "OmcB\\"
+        elif "LPS" in filename:
+            thisDir = outputDir + "LPS\\"
+        elif "Hsp60" in filename:
+            thisDir = outputDir + "Hsp60\\"
+        elif "TepP" in filename:
+            thisDir = outputDir + "TepP\\"
+        elif "Ctad1" in filename:
+            thisDir = outputDir + "Ctad1\\"
+        elif "Cdsf" in filename:
+            thisDir = outputDir + "Cdsf\\"
+        elif "PmpD" in filename:
+            thisDir = outputDir + "PmpD\\"
+        
+        if not os.path.exists(thisDir):
+            os.makedirs(thisDir)
+        saveMarkerSpecific(thisDir, filename, output_string)
+        
+        
+def saveMarkerSpecific(directory, filename, output):
+    if "CF" in filename:
+        csv = open(directory + "cell-free.csv", "a")
+    elif "cell" in filename or "Cell" in filename:
+        csv = open(directory + "cell.csv", "a")
+    else:
+        csv = open(directory + "egress.csv", "a")
+    csv.write(output)
+    csv.close()
+    return
+
 
 ## todo
 def checkStainQuality(gen, pol):
     cumulative = getCumulativeStack(gen) / len(gen)
 
     temp = Image.fromarray(cumulative)
+    if convertFlag:
+        temp = temp.convert('I')
     gray = temp.convert('L')
+    
+    #NOTE: Should equalise here
 
     thresholded = np.asarray(gray).copy()
+    
+    thresholded = equalise(thresholded)
+    if thresholded is None:
+        print "NOT DOUBLE STAINED - FAILED ON GEN BRIGHTNESS"
+        return False, 0
 
     # First count the number of EB pixels
     thresholded[thresholded < detectionThresholdVal] = 0
@@ -770,8 +1078,14 @@ def checkStainQuality(gen, pol):
     ## Same as above for pol channel
     cumulative = getCumulativeStack(pol) / len(pol)
     temp = Image.fromarray(cumulative)
+    if convertFlag:
+        temp = temp.convert('I')
     gray = temp.convert('L')
     thresholded = np.asarray(gray).copy()
+    thresholded = equalise(thresholded)
+    if thresholded is None:
+        print "NOT DOUBLE STAINED - FAILED ON POL BRIGHTNESS"
+        return False, 0
 
     thresholded[thresholded < detectionThresholdVal] = 0
     thresholded[thresholded >= detectionThresholdVal] = 1
@@ -784,20 +1098,22 @@ def checkStainQuality(gen, pol):
     # Next assess stain quality, where 1 is perfect, 0 is terrible
     # Check proportion of non-EB pixels which are non-black
     # A high proportion is bad; low proportion is good
-    genQuality = genBGSum / (262144 - genEBSum)
-    polQuality = polBGSum / (262144 - polEBSum)
-    stainQuality = (1 - genQuality) * (1 - polQuality)
+    genQuality = float(genBGSum) / (262144.0 - genEBSum)
+    polQuality = float(polBGSum) / (262144.0 - polEBSum)
+    stainQuality = (1.0 - genQuality) * (1.0 - polQuality)
 
     print "stainQuality is " + str(stainQuality)
 
     doubleStained = True
-    # First check if double stained by checking if either is less than half...
-    if genEBSum > polEBSum and polEBSum < (genEBSum * 0.5) and stainQuality > 0.25:
+    # First check if double stained by checking if either is less than 1%
+    if genEBSum > polEBSum and polEBSum < (genEBSum * 0.01) and stainQuality > 0.25:
         doubleStained = False
-    elif polEBSum > genEBSum and genEBSum < (polEBSum * 0.5) and stainQuality > 0.25:
+    elif polEBSum > genEBSum and genEBSum < (polEBSum * 0.01) and stainQuality > 0.25:
         doubleStained = False
 
     return doubleStained, stainQuality
+
+convertFlag = False
 
 def processFolder(folder):
     # defines directory name as folder drag-dropped in (indexed as second 'argument')
@@ -813,12 +1129,35 @@ def processFolder(folder):
         os.makedirs(saveDir)
 
     # Want regex to recognise string of form '[anything]z[num][num]_ch00.tif'
-    gChannel = glob.glob(workDir + "*z[0-9][0-9]_ch00.tif")
-    rChannel = glob.glob(workDir + "*z[0-9][0-9]_ch01.tif")
-    bChannel = glob.glob(workDir + "*z[0-9][0-9]_ch02.tif")
+    gChannel = glob.glob(workDir + "*z[0-9]*_ch00.tif")
+    rChannel = glob.glob(workDir + "*z[0-9]*_ch01.tif")
+    bChannel = glob.glob(workDir + "*z[0-9]*_ch02.tif")
 
     genChannel = gChannel
     polChannel = rChannel if len(rChannel) else bChannel
+    
+    
+
+    if "swap" in filename:
+        print "Swapped Folder"
+        genChannel = polChannel
+        polChannel = gChannel
+    
+    # Check if it's in 16 bit
+    # TODO Convert appropriately!
+    curImg = Image.open(genChannel[0])
+    if curImg.mode == "I;16":
+        print "16 BIT IMAGES, SKIPPING"
+        return False
+        convertFlag = True
+    else:
+        convertFlag = False
+            
+    
+    if len(rChannel) and len(bChannel) and len(gChannel):
+        print "TRIPLE STAINED"
+        return False
+
 
     # defines equalisedStack as result of getEqualisedStack function i.e. average of stack luminosity in green channel. Similar to a max projection
     equalisedStack = getEqualisedStack(genChannel)
@@ -830,11 +1169,42 @@ def processFolder(folder):
     doubleStained, stainQuality = checkStainQuality(genChannel, polChannel)
 
     if not doubleStained:
-        print nameArr[len(nameArr - 2)] + " - Not double stained"
-        f = open(errFile, 'a')
-        f.write(nameArr[len(nameArr)-3] + "/" + nameArr[len(nameArr)-2] + " not double stained!\n")
-        f.close()
-        failedStainCount += 1
+        print "Not doublestained"
+        
+        if "MOMP" in filename or "Momp" in filename or "momp" in filename:     
+            if "OmcB1" in filename:
+                nonDoubled['omcb1momp'] += 1
+            elif "OmcB2" in filename:
+                nonDoubled['omcb2momp'] += 1
+            elif "Ctad1" in filename:
+                nonDoubled['ctad1momp'] += 1
+            else:       
+                nonDoubled['momp'] += 1
+        elif "OmcB" in filename:
+            if "OmcB1" in filename:
+                nonDoubled['omcb1'] += 1
+            elif "OmcB2" in filename:
+                nonDoubled['omcb2'] += 1
+            elif "OmcB3" in filename:
+                nonDoubled['omcb3'] += 1
+            else:
+                nonDoubled['omcb'] += 1
+        elif "LPS" in filename:
+            nonDoubled['lps'] += 1
+        elif "Hsp60" in filename:
+            nonDoubled['hsp60'] += 1
+        elif "TepP" in filename:
+            nonDoubled['tepp'] += 1
+        elif "Ctad1" in filename:
+            nonDoubled['ctad1'] += 1
+        elif "Cdsf" in filename:
+            nonDoubled['cdsf'] += 1
+        elif "PmpD" in filename:
+            nonDoubled['pmpd'] += 1
+        
+        #f = open(errFile, 'a')
+        #f.write(nameArr[len(nameArr)-3] + "/" + nameArr[len(nameArr)-2] + " not double stained!\n")
+        #f.close()
         return False
 
     # Uses the 'max projection' from getequalisedstack within the getcandidateEBs function, to locate EBs in the image. Defines each as 'ebs' and prints for user
@@ -849,29 +1219,113 @@ def processFolder(folder):
     # Print output, save files etc.
     generateOutput(filename, saveDir, ebs, stainQuality)
 
+    if "MOMP" in filename or "Momp" in filename or "momp" in filename:     
+        if "OmcB1" in filename:
+            numStack['omcb1momp'] += 1
+        elif "OmcB2" in filename:
+            numStack['omcb2momp'] += 1
+        elif "Ctad1" in filename:
+            numStack['ctad1momp'] += 1
+        else:       
+            numStack['momp'] += 1
+    elif "OmcB" in filename:
+        if "OmcB1" in filename:
+            numStack['omcb1'] += 1
+        elif "OmcB2" in filename:
+            numStack['omcb2'] += 1
+        elif "OmcB3" in filename:
+            numStack['omcb3'] += 1
+        else:
+            numStack['omcb'] += 1
+    elif "LPS" in filename:
+        numStack['lps'] += 1
+    elif "Hsp60" in filename:
+        numStack['hsp60'] += 1
+    elif "TepP" in filename:
+        numStack['tepp'] += 1
+    elif "Ctad1" in filename:
+        numStack['ctad1'] += 1
+    elif "Cdsf" in filename:
+        numStack['cdsf'] += 1
+    elif "PmpD" in filename:
+        numStack['pmpd'] += 1
+
     return True
 
 
 ## MAIN CODE ###################################################################
 
-sourceFolder = sys.argv[1]
+if len(sys.argv) == 2:
+    sourceFolder = sys.argv[1]
+else:
+    sourceFolder = testDir
 
 NumberFailed = 0
+
 NumberSucceeded = 0
+
+
+# Dictionaries for counting numberfailed etc.
+# TODO Clean up...
+nonDoubled = {}
+
+nonDoubled['momp'] = 0
+
+nonDoubled['omcb1momp'] = 0
+nonDoubled['omcb2momp'] = 0
+nonDoubled['ctad1momp'] = 0
+
+nonDoubled['omcb1'] = 0
+nonDoubled['omcb2'] = 0
+nonDoubled['omcb3'] = 0
+nonDoubled['omcb'] = 0
+nonDoubled['lps'] = 0
+nonDoubled['hsp60'] = 0
+nonDoubled['tepp'] = 0
+nonDoubled['ctad1'] = 0
+nonDoubled['cdsf'] = 0
+nonDoubled['pmpd'] = 0
+
+numStack = {}
+
+numStack['momp'] = 0
+
+numStack['omcb1momp'] = 0
+numStack['omcb2momp'] = 0
+numStack['ctad1momp'] = 0
+
+numStack['omcb1'] = 0
+numStack['omcb2'] = 0
+numStack['omcb3'] = 0
+numStack['omcb'] = 0
+numStack['lps'] = 0
+numStack['hsp60'] = 0
+numStack['tepp'] = 0
+numStack['ctad1'] = 0
+numStack['cdsf'] = 0
+numStack['pmpd'] = 0
+
 
 f = open(errFile, 'a')
 f.write("//// Processing " + sourceFolder + " at " + time.strftime("%c") + " ////\n\n")
 f.close()
 
 for root, dirnames, filenames in os.walk(sourceFolder):
-
+    
+    # Temporary fix to ignore particular files in data set
+    if "2016.12.07" not in root and "2016.12.1" not in root and "2016.12.2" not in root and "2017." not in root:
+        continue
+    if "Representatives" in root:
+        continue
+        
+    
     dirPath = root.split('\\')
     if dirPath[len(dirPath) - 1] == "analysis":
         continue
 
 
     if len(filenames) > 0:
-        print "Processing " + dirPath[len(dirPath) - 2] + "/" + dirPath[len(dirPath) - 1]
+        print "Processing " + dirPath[len(dirPath) - 4] + "/" + dirPath[len(dirPath) - 3] + "/"+ dirPath[len(dirPath) - 2] + "/" + dirPath[len(dirPath) - 1]
         try:
             if processFolder(root):
                 print "Ta-dah!\n"
@@ -879,20 +1333,24 @@ for root, dirnames, filenames in os.walk(sourceFolder):
             else:
                 print "Uh-oh\n"
                 NumberFailed = NumberFailed + 1
+                failedStainCount += 1
                 f = open(errFile, 'a')
                 f.write(" - " + root + " failed\n\n")
                 f.close()
         except Exception, e:
             exc_type, exc_value, exc_tb = sys.exc_info()
-
+#
             print "Uh-oh - exception!\n"
             print str(e) + " at line " + str(exc_tb.tb_lineno)
 
             NumberFailed = NumberFailed + 1
 
 f = open(errFile, 'a')
-f.write("Total failed: " + str(NumberFailed) + "\n")
-f.write("Total non double-stained stacks: " + str(failedStainCount) + "\n")
+f.write("NON-DOUBLE STAINED:\n")
+for stain in nonDoubled:
+    f.write("- %s: %d out of %d\n" % (stain, nonDoubled[stain], (numStack[stain]) + nonDoubled[stain]))
+#f.write("Total failed: " + str(NumberFailed) + "\n")
+#f.write("Total non double-stained stacks: " + str(failedStainCount) + "\n")
 f.write("\n////\n\n")
 f.close()
 
@@ -903,4 +1361,16 @@ print "\n\nRun successful - press any key to close this window"
 print "Number failed = " + str(NumberFailed)
 print "Number succeeded = " + str(NumberSucceeded)
 
+#Freq = 1000 # Set Frequency To 2500 Hertz
+#Dur = 100 # Set Duration To 1000 ms == 1 second
+# Beep for completion :)
+if NumberSucceeded == 0:
+    winsound.Beep(1250,150)
+    winsound.Beep(777,300)
+else:
+    winsound.Beep(1000,100)
+    winsound.Beep(1500,200)    
+
+
+# Wait for user input before closing window
 test = raw_input()
